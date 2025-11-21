@@ -4,11 +4,13 @@ import { createReport, getReports } from "../controllers/reportController.js";
 
 const router = express.Router();
 
-// Multer config
+// Multer — stores images in /uploads/
 const upload = multer({ dest: "uploads/" });
 
-// Routes
+// POST /api/reports
 router.post("/", upload.single("image"), createReport);
+
+// GET /api/reports
 router.get("/", getReports);
 
 export default router;

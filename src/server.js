@@ -7,42 +7,40 @@ import { connectDB } from "./config/db.js";
 import reportRoutes from "./routes/reportRoutes.js";
 import testRoutes from "./routes/testRoutes.js";
 
-
 dotenv.config();
 
 const app = express();
 
-// Enable CORS so React frontend can call backend
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://clean-city-eth.vercel.app"
-  ],
-  methods: ["GET", "POST"],
-  credentials: true
-}));
+// CORS
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST"],
+  })
+);
 
-// Use test routes
-app.use("/api", testRoutes);
-
-// Parse JSON bodies (for non-file routes)
+// JSON parser
 app.use(express.json());
 
-// Serve uploaded images statically
+// Paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Static uploads folder
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Mount report routes
-app.use("/api/reports", reportRoutes);
+// Routes
+app.use("/api", testRoutes);               // /api/test etc
+app.use("/api/reports", reportRoutes);     // /api/reports
 
-// Test main API route
+// Simple API test
 app.get("/api", (req, res) => {
   res.json({ message: "API working" });
 });
 
-// Connect to database
+// DB connection
 connectDB();
 
+// Run server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("Server running on port " + PORT));
