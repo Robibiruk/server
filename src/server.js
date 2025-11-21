@@ -13,7 +13,14 @@ dotenv.config();
 const app = express();
 
 // Enable CORS so React frontend can call backend
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://your-vercel-domain.vercel.app"
+  ],
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 
 // Use test routes
 app.use("/api", testRoutes);
